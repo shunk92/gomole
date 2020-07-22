@@ -1,0 +1,10 @@
+[Bastion]
+Server = "ssh-user@localhost:20022"
+AuthFile = "ssh-user1.pem"
+
+[[Server]]
+LocalPort = 12345
+Distination = "10.0.0.2:30022"
+
+
+
