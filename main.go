@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"sync"
 
 	"github.com/BurntSushi/toml"
 )
@@ -21,13 +22,16 @@ func main() {
 	var p protocol
 	p.new()
 
+	wg := new(sync.WaitGroup)
 	for _, s := range cfg.Server {
-		go makeTunnel(s, cfg, p)
+		wg.Add(1)
+		go makeTunnel(wg, s, cfg, p)
 	}
+	wg.Wait()
 
 }
 
-func makeTunnel(srv server, cfg config, p protocol) {
+func makeTunnel(wg *sync.WaitGroup, srv server, cfg config, p protocol) {
 	port, err := p.getPortNo(srv.DistinationPort)
 	if err != nil {
 		log.Println(err)
