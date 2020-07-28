@@ -21,26 +21,25 @@ func main() {
 
 	var p protocol
 	p.new()
-
+	bst := cfg.Bastion
 	wg := new(sync.WaitGroup)
 	for _, s := range cfg.Server {
 		wg.Add(1)
-		go makeTunnel(wg, s, cfg, p)
+		go makeTunnel(wg, s, bst, p)
 	}
 	wg.Wait()
-
 }
 
-func makeTunnel(wg *sync.WaitGroup, srv server, cfg config, p protocol) {
+func makeTunnel(wg *sync.WaitGroup, srv server, bst bastion, p protocol) {
 	port, err := p.getPortNo(srv.DistinationPort)
 	if err != nil {
-		log.Println(err)
+		log.Fatal(err)
 		return
 	}
 	distination := fmt.Sprintf("%v:%v", srv.Distination, port)
 
-	auth := PrivateKeyFile(cfg.Bastion.AuthFile)
-	tunnel := NewSSHTunnel(cfg.Bastion.Server, auth, distination, srv.LocalPort)
+	auth := PrivateKeyFile(bst.AuthFile)
+	tunnel := NewSSHTunnel(bst.Server, auth, distination, srv.LocalPort)
 	tunnel.Log = log.New(os.Stdout, "", log.Ldate|log.Lmicroseconds)
 	tunnel.Start()
 }

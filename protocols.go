@@ -31,7 +31,7 @@ func (p *protocol) getPortNo(protocolName interface{}) (int, error) {
 			return 0, errors.New("Protocol doesn't exist in list, you have to assign port number.")
 		}
 	default:
-		return 0, errors.New("Protocol doesn't exist in list, you have to assign port number.")
+		return 0, errors.New("Protocol doesn't assigned, you have to assign protocol name or port number.")
 	}
 
 }

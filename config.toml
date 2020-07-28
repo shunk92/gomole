@@ -1,10 +1,40 @@
+
+# Bastion Server Setting
+# ///
+# [Bastion]
+# Server = "ssh-user@12.34.56.78:22"
+# AuthFile = "path/to/pemkey"
+
 [Bastion]
 Server = "ssh-user@localhost:22"
 AuthFile = "ssh-user.pem"
 
+
+# Distination Server Setting
+# You can discribe multiple servers
+# ///
+# [[Server]]
+# LocalPort = 12345
+# Distination = "10.0.0.2"
+# DistinationPort = "RDP"
+# ///
+# DistinationPort allows a plotocol name and port number.
+# You can use below protocol names by default;
+# ssh:22
+# http:80
+# https:443
+# rdp:3389
+# kibana:5601
+# ne4j:7474
+# bolt:7687
+# elasticsearch:9200
+# scaler:30600
+# 
+# You can add your own names and ports in editing protocol.toml and build.
+
 [[Server]]
 LocalPort = 12345
-Distination = "10.0.0.2"
+Distination = "10.0.0.1"
 DistinationPort = "RDP"
 
 
