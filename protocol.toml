@@ -1,0 +1,9 @@
+ssh = 22
+http = 80
+https = 443
+rdp = 3389
+kibana = 5601
+ne4j = 7474
+bolt = 7687
+elasticsearch = 9200
+scaler = 30600

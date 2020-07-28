@@ -1,6 +1,8 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"log"
 	"os"
 
@@ -8,22 +10,35 @@ import (
 )
 
 func main() {
+	configFile := flag.String("config", "config.toml", "config file")
+	flag.Parse()
+
 	var cfg config
-	if _, err := toml.DecodeFile("config.toml", &cfg); err != nil {
+	if _, err := toml.DecodeFile(*configFile, &cfg); err != nil {
 		log.Fatal(err)
 	}
-	// for _, s := range cfg.Server {
-	s := cfg.Server[0]
-	auth := PrivateKeyFile(cfg.Bastion.AuthFile)
-	tunnel := NewSSHTunnel(cfg.Bastion.Server, auth, s.Distination, s.LocalPort)
-	tunnel.Log = log.New(os.Stdout, "", log.Ldate|log.Lmicroseconds)
-	tunnel.Start()
-	// }
+
+	var p protocol
+	p.new()
+
+	for _, s := range cfg.Server {
+		go makeTunnel(s, cfg, p)
+	}
 
 }
 
-func makeTunnel(cfg config) {
+func makeTunnel(srv server, cfg config, p protocol) {
+	port, err := p.getPortNo(srv.DistinationPort)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	distination := fmt.Sprintf("%v:%v", srv.Distination, port)
 
+	auth := PrivateKeyFile(cfg.Bastion.AuthFile)
+	tunnel := NewSSHTunnel(cfg.Bastion.Server, auth, distination, srv.LocalPort)
+	tunnel.Log = log.New(os.Stdout, "", log.Ldate|log.Lmicroseconds)
+	tunnel.Start()
 }
 
 type bastion struct {
@@ -32,8 +47,9 @@ type bastion struct {
 }
 
 type server struct {
-	LocalPort   int
-	Distination string
+	LocalPort       int
+	DistinationPort interface{}
+	Distination     string
 }
 
 type config struct {
