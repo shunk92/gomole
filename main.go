@@ -41,6 +41,7 @@ func makeTunnel(wg *sync.WaitGroup, srv server, bst bastion, p protocol) {
 	auth := PrivateKeyFile(bst.AuthFile)
 	tunnel := NewSSHTunnel(bst.Server, auth, distination, srv.LocalPort)
 	tunnel.Log = log.New(os.Stdout, "", log.Ldate|log.Lmicroseconds)
+	tunnel.logf("Start connection [%s] -> port %d", srv.ServerName, srv.LocalPort)
 	tunnel.Start()
 }
 
@@ -50,6 +51,7 @@ type bastion struct {
 }
 
 type server struct {
+	ServerName      string
 	LocalPort       int
 	DistinationPort interface{}
 	Distination     string

@@ -14,8 +14,9 @@ AuthFile = "ssh-user.pem"
 # You can discribe multiple servers
 # ///
 # [[Server]]
+# ServerName = "server 01"
 # LocalPort = 12345
-# Distination = "10.0.0.2"
+# Distination = "10.0.0.1"
 # DistinationPort = "RDP"
 # ///
 # DistinationPort allows a plotocol name and port number.
@@ -33,9 +34,7 @@ AuthFile = "ssh-user.pem"
 # You can add your own names and ports in editing protocol.toml and build.
 
 [[Server]]
+ServerName = "server 01"
 LocalPort = 12345
 Distination = "10.0.0.1"
 DistinationPort = "RDP"
-
-
-

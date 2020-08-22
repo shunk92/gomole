@@ -27,11 +27,10 @@ func (p *protocol) getPortNo(protocolName interface{}) (int, error) {
 	case string:
 		if port := p.port[strings.ToLower(protocolName.(string))]; port != nil {
 			return int(port.(int64)), nil
-		} else {
-			return 0, errors.New("Protocol doesn't exist in list, you have to assign port number.")
 		}
+		return 0, errors.New("protocol doesn't exist in list, you have to assign port number")
 	default:
-		return 0, errors.New("Protocol doesn't assigned, you have to assign protocol name or port number.")
+		return 0, errors.New("protocol doesn't assigned, you have to assign protocol name or port number")
 	}
 
 }
