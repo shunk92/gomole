@@ -1,23 +1,22 @@
 package main
 
 import (
+	_ "embed"
 	"errors"
-	"io/ioutil"
 	"strings"
 
 	"github.com/BurntSushi/toml"
 )
+
+//go:embed protocol.toml
+var protocolFile []byte
 
 type protocol struct {
 	port map[string]interface{}
 }
 
 func (p *protocol) new() {
-	bytes, err := ioutil.ReadFile("./protocol.toml")
-	if err != nil {
-		panic(err)
-	}
-	toml.Unmarshal(bytes, &p.port)
+	toml.Unmarshal(protocolFile, &p.port)
 }
 
 func (p *protocol) getPortNo(protocolName interface{}) (int, error) {
